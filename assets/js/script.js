@@ -57,42 +57,40 @@ $(".card .list-group").sortable({
   scroll: false,
   tolerance: "pointer",
   helper: "clone",
-  activate: function(event) {
-    console.log("activate", this);
+  activate: function(event, ui) {
     $(this).addClass("dropover");
-    $('.bottom-trash').addClass("bottom-trash-drag")
+    $('.bottom-trash').addClass("bottom-trash-drag");
   },
-  deactivate: function(event) {
-    console.log("deactivate", this);
+  deactivate: function(event, ui) {
     $(this).removeClass("dropover");
     $('.bottom-trash').removeClass("bottom-trash-drag");
   },
   over: function(event) {
-    console.log("out", event.target);
-    $('event.target').addClass("dropover-active");
+    $(event.target).addClass("dropover-active");
+  },
+  out: function(event) {
+    $(event.target).removeClass("dropover-active");
   },
   update: function(event) {
     // array to store the task data in
     let tempArr = [];
 
     // loop over current set of children in sortable list
-    $(this).children().each(function(){
-        let text = $(this)
-        .find("p")
-        .text()
-        .trim();
-
-        let date = $(this)
-        .find("span")
-        .text()
-        .trim();
-
-    // add task data to the temp array as an object
-      tempArr.push({
-        text: text,
-        date: date
+    $(this)
+      .children()
+      .each(function() {
+        // save values in temp array
+        tempArr.push({
+          text: $(this)
+            .find("p")
+            .text()
+            .trim(),
+          date: $(this)
+            .find("span")
+            .text()
+            .trim()
+        });
       });
-    });
 
     // trim down list's ID to match object property
     let arrName = $(this)
@@ -110,16 +108,12 @@ $("#trash").droppable({
   tolerance: "touch",
   drop: function(event, ui) {
     ui.draggable.remove();
-    console.log("drop");
     $('.bottom-trash').removeClass("bottom-trash-active");
   },
   over: function(event, ui) {
-    console.log("over");
     $('.bottom-trash').addClass("bottom-trash-active");
   },
   out: function(event, ui) {
-    console.log("out");
-    $('event.target').removeClass("dropover-active");
     $('.bottom-trash').removeClass("bottom-trash-active");
   }
 });
